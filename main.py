@@ -1,4 +1,4 @@
-# main.py - Versão Simplificada com RM
+# main.py - Versão sem Emojis
 # Colocar este arquivo na PASTA PRINCIPAL do projeto
 
 import json
@@ -9,7 +9,7 @@ from datetime import datetime
 
 class Usuario:
     def __init__(self, rm, nome, email, senha, tipo="aluno"):
-        self.rm = rm                      # RM do aluno
+        self.rm = rm
         self.nome = nome
         self.email = email
         self.senha = senha
@@ -33,13 +33,14 @@ class Laboratorio:
         self.andar = andar
     
     def __repr__(self):
-        return f"{self.nome} | Cap: {self.capacidade} | Local: {self.predio} - {self.andar}º"
+        recursos_str = ", ".join(self.recursos) if self.recursos else "Nenhum"
+        return f"{self.nome} | Cap: {self.capacidade} | Recursos: {recursos_str} | Local: {self.predio} - {self.andar} andar"
 
 
 class Reserva:
     def __init__(self, id, rm_aluno, id_laboratorio, data_inicio, data_fim, status="ativa"):
         self.id = id
-        self.rm_aluno = rm_aluno          # RM do aluno
+        self.rm_aluno = rm_aluno
         self.id_laboratorio = id_laboratorio
         self.data_inicio = data_inicio
         self.data_fim = data_fim
@@ -58,7 +59,7 @@ class AuthService:
     
     def carregar(self):
         try:
-            with open(self.ARQUIVO, 'r') as f:
+            with open(self.ARQUIVO, 'r', encoding='utf-8') as f:
                 dados = json.load(f)
                 self.usuarios = [Usuario.from_dict(u) for u in dados]
         except:
@@ -67,8 +68,8 @@ class AuthService:
     
     def salvar(self):
         os.makedirs("data", exist_ok=True)
-        with open(self.ARQUIVO, 'w') as f:
-            json.dump([u.to_dict() for u in self.usuarios], f, indent=2)
+        with open(self.ARQUIVO, 'w', encoding='utf-8') as f:
+            json.dump([u.to_dict() for u in self.usuarios], f, indent=2, ensure_ascii=False)
     
     def criar_iniciais(self):
         self.usuarios = [
@@ -79,10 +80,9 @@ class AuthService:
         self.salvar()
     
     def cadastrar(self, rm, nome, email, senha):
-        # Verifica se RM já existe
         for u in self.usuarios:
             if u.rm == rm:
-                return False, "RM já cadastrado!"
+                return False, "RM ja cadastrado!"
         
         novo = Usuario(rm, nome, email, senha)
         self.usuarios.append(novo)
@@ -115,7 +115,7 @@ class LaboratorioService:
     
     def carregar(self):
         try:
-            with open(self.ARQUIVO, 'r') as f:
+            with open(self.ARQUIVO, 'r', encoding='utf-8') as f:
                 dados = json.load(f)
                 self.laboratorios = [Laboratorio(l["id"], l["nome"], l["capacidade"], l["recursos"], l["predio"], l["andar"]) for l in dados]
         except:
@@ -123,22 +123,30 @@ class LaboratorioService:
     
     def salvar(self):
         os.makedirs("data", exist_ok=True)
-        with open(self.ARQUIVO, 'w') as f:
-            json.dump([{"id": l.id, "nome": l.nome, "capacidade": l.capacidade, "recursos": l.recursos, "predio": l.predio, "andar": l.andar} for l in self.laboratorios], f, indent=2)
+        with open(self.ARQUIVO, 'w', encoding='utf-8') as f:
+            json.dump([{"id": l.id, "nome": l.nome, "capacidade": l.capacidade, "recursos": l.recursos, "predio": l.predio, "andar": l.andar} for l in self.laboratorios], f, indent=2, ensure_ascii=False)
     
     def criar_iniciais(self):
         self.laboratorios = [
-            Laboratorio(1, "Lab Informática A", 30, ["computadores", "projetor"], "Paulista", 2),
-            Laboratorio(2, "Lab Informática B", 30, ["computadores"], "Paulista", 2),
+            Laboratorio(1, "Lab Informatica A", 30, ["computadores", "projetor"], "Paulista", 2),
+            Laboratorio(2, "Lab Informatica B", 30, ["computadores"], "Paulista", 2),
             Laboratorio(3, "Lab Redes", 20, ["equipamentos rede"], "Paulista", 3),
-            Laboratorio(4, "Lab IoT", 15, ["Arduinos"], "Vila Olímpia", 1),
+            Laboratorio(4, "Lab IoT", 15, ["Arduinos"], "Vila Olimpia", 1),
             Laboratorio(5, "Sala Estudos", 40, ["quadro"], "Paulista", 1),
         ]
         self.salvar()
     
     def listar(self):
+        if not self.laboratorios:
+            print("Nenhum laboratorio cadastrado.")
+            return
+        
+        print("\n" + "="*60)
+        print("LABORATORIOS DISPONIVEIS")
+        print("="*60)
         for lab in self.laboratorios:
-            print(f"[{lab.id}] {lab}")
+            print(f"\n[{lab.id}] {lab}")
+        print("\n" + "="*60)
     
     def buscar(self, id):
         for lab in self.laboratorios:
@@ -157,7 +165,7 @@ class ReservaService:
     
     def carregar(self):
         try:
-            with open(self.ARQUIVO, 'r') as f:
+            with open(self.ARQUIVO, 'r', encoding='utf-8') as f:
                 dados = json.load(f)
                 self.reservas = [Reserva(r["id"], r["rm_aluno"], r["id_laboratorio"], r["data_inicio"], r["data_fim"], r.get("status", "ativa")) for r in dados]
         except:
@@ -165,55 +173,94 @@ class ReservaService:
     
     def salvar(self):
         os.makedirs("data", exist_ok=True)
-        with open(self.ARQUIVO, 'w') as f:
-            json.dump([{"id": r.id, "rm_aluno": r.rm_aluno, "id_laboratorio": r.id_laboratorio, "data_inicio": r.data_inicio, "data_fim": r.data_fim, "status": r.status} for r in self.reservas], f, indent=2)
+        with open(self.ARQUIVO, 'w', encoding='utf-8') as f:
+            json.dump([{"id": r.id, "rm_aluno": r.rm_aluno, "id_laboratorio": r.id_laboratorio, "data_inicio": r.data_inicio, "data_fim": r.data_fim, "status": r.status} for r in self.reservas], f, indent=2, ensure_ascii=False)
     
     def disponivel(self, lab_id, inicio, fim):
         for r in self.reservas:
             if r.id_laboratorio == lab_id and r.status == "ativa":
                 if not (fim <= r.data_inicio or inicio >= r.data_fim):
-                    return False
-        return True
+                    return False, r
+        return True, None
+    
+    def verificar_disponibilidade(self, lab_id, inicio, fim):
+        lab = self.lab_service.buscar(lab_id)
+        if not lab:
+            return False, "Laboratorio nao encontrado!"
+        
+        disponivel, reserva_conflito = self.disponivel(lab_id, inicio, fim)
+        
+        if disponivel:
+            return True, f"Laboratorio DISPONIVEL para o horario solicitado!\n   {inicio} ate {fim}"
+        else:
+            return False, f"Laboratorio INDISPONIVEL!\n   Conflito com reserva #{reserva_conflito.id}\n   Horario: {reserva_conflito.data_inicio} ate {reserva_conflito.data_fim}"
     
     def reservar(self, rm, lab_id, inicio, fim):
         lab = self.lab_service.buscar(lab_id)
         if not lab:
-            return False, "Laboratório não encontrado!"
+            return False, "Laboratorio nao encontrado!"
         
-        if not self.disponivel(lab_id, inicio, fim):
-            return False, "Horário indisponível!"
+        disponivel, _ = self.disponivel(lab_id, inicio, fim)
+        if not disponivel:
+            return False, "Horario indisponivel! Laboratorio ja reservado neste periodo."
         
         if inicio >= fim:
-            return False, "Data de início deve ser anterior ao fim!"
+            return False, "Data de inicio deve ser anterior ao fim!"
         
         if inicio < datetime.now().strftime("%Y-%m-%d %H:%M"):
-            return False, "Não pode reservar horário passado!"
+            return False, "Nao pode reservar horario passado!"
         
         novo_id = max([r.id for r in self.reservas], default=0) + 1
         nova = Reserva(novo_id, rm, lab_id, inicio, fim)
         self.reservas.append(nova)
         self.salvar()
-        return True, f"✅ Reserva #{novo_id} confirmada!"
+        return True, f"Reserva #{novo_id} confirmada!\n   Laboratorio: {lab.nome}\n   Horario: {inicio} ate {fim}"
     
     def cancelar(self, res_id, rm):
         for r in self.reservas:
             if r.id == res_id:
                 if r.rm_aluno != rm:
-                    return False, "Você só pode cancelar suas reservas!"
+                    return False, "Voce so pode cancelar suas reservas!"
                 if r.status != "ativa":
-                    return False, "Reserva já cancelada!"
+                    return False, "Reserva ja cancelada!"
                 r.status = "cancelada"
                 self.salvar()
-                return True, f"✅ Reserva #{res_id} cancelada!"
-        return False, "Reserva não encontrada!"
+                return True, f"Reserva #{res_id} cancelada!"
+        return False, "Reserva nao encontrada!"
     
     def minhas_reservas(self, rm):
         ativas = [r for r in self.reservas if r.rm_aluno == rm and r.status == "ativa"]
         if not ativas:
-            print("📭 Nenhuma reserva ativa.")
+            print("\nNenhuma reserva ativa.")
+            return
+        
+        print("\n" + "="*60)
+        print("MINHAS RESERVAS ATIVAS")
+        print("="*60)
         for r in ativas:
             lab = self.lab_service.buscar(r.id_laboratorio)
-            print(f"#{r.id} - {lab.nome} - {r.data_inicio} até {r.data_fim}")
+            print(f"\nReserva #{r.id}")
+            print(f"   Laboratorio: {lab.nome}")
+            print(f"   Inicio: {r.data_inicio}")
+            print(f"   Fim: {r.data_fim}")
+        print("\n" + "="*60)
+    
+    def todas_reservas(self):
+        if not self.reservas:
+            print("\nNenhuma reserva cadastrada.")
+            return
+        
+        print("\n" + "="*60)
+        print("TODAS AS RESERVAS")
+        print("="*60)
+        for r in self.reservas:
+            lab = self.lab_service.buscar(r.id_laboratorio)
+            print(f"\nReserva #{r.id} | Status: {r.status}")
+            print(f"   RM: {r.rm_aluno}")
+            print(f"   Laboratorio: {lab.nome if lab else 'N/A'}")
+            print(f"   Inicio: {r.data_inicio}")
+            print(f"   Fim: {r.data_fim}")
+        print("\n" + "="*60)
 
 
 # ==================== MENU ====================
@@ -230,21 +277,21 @@ def main():
     while True:
         limpar()
         print("="*50)
-        print("🏫 RESERVA DE LABORATÓRIOS - FIAP")
+        print("RESERVA DE LABORATORIOS - FIAP")
         print("="*50)
         
         if auth.get_usuario() is None:
             print("\n1 - Login")
             print("2 - Cadastrar")
             print("0 - Sair")
-            op = input("\n👉 Escolha: ")
+            op = input("\nEscolha: ")
             
             if op == "1":
                 rm = input("RM: ")
                 senha = input("Senha: ")
                 ok, msg = auth.login(rm, senha)
                 print(msg)
-                input("Pressione Enter...")
+                input("\nPressione Enter...")
             elif op == "2":
                 rm = input("RM: ")
                 nome = input("Nome: ")
@@ -252,61 +299,92 @@ def main():
                 senha = input("Senha: ")
                 ok, msg = auth.cadastrar(rm, nome, email, senha)
                 print(msg)
-                input("Pressione Enter...")
+                input("\nPressione Enter...")
             elif op == "0":
-                print("Até logo!")
+                print("Ate logo!")
                 break
         else:
             user = auth.get_usuario()
-            print(f"\n👤 Logado: {user.nome} (RM: {user.rm})")
+            print(f"\nLogado: {user.nome} (RM: {user.rm})")
             
             if auth.is_coordenador():
-                print("\n[1] Listar laboratórios")
-                print("[2] Fazer reserva")
-                print("[3] Minhas reservas")
-                print("[4] Cancelar reserva")
-                print("[5] Ver todas reservas")
+                print("\n[1] Listar laboratorios")
+                print("[2] Verificar disponibilidade")
+                print("[3] Fazer reserva")
+                print("[4] Minhas reservas")
+                print("[5] Cancelar reserva")
+                print("[6] Ver todas reservas")
                 print("[0] Logout")
             else:
-                print("\n[1] Listar laboratórios")
-                print("[2] Fazer reserva")
-                print("[3] Minhas reservas")
-                print("[4] Cancelar reserva")
+                print("\n[1] Listar laboratorios")
+                print("[2] Verificar disponibilidade")
+                print("[3] Fazer reserva")
+                print("[4] Minhas reservas")
+                print("[5] Cancelar reserva")
                 print("[0] Logout")
             
-            op = input("\n👉 Escolha: ")
+            op = input("\nEscolha: ")
             
             if op == "1":
                 lab_service.listar()
                 input("\nPressione Enter...")
+            
             elif op == "2":
+                limpar()
+                print("="*50)
+                print("VERIFICAR DISPONIBILIDADE")
+                print("="*50)
                 lab_service.listar()
                 try:
-                    lab_id = int(input("\nID do laboratório: "))
-                    inicio = input("Data início (AAAA-MM-DD HH:MM): ")
-                    fim = input("Data fim (AAAA-MM-DD HH:MM): ")
-                    ok, msg = reserva_service.reservar(user.rm, lab_id, inicio, fim)
-                    print(msg)
-                except:
-                    print("ID inválido!")
-                input("Pressione Enter...")
-            elif op == "3":
-                reserva_service.minhas_reservas(user.rm)
+                    lab_id = int(input("\nDigite o ID do laboratorio: "))
+                    print("\nDigite a data e hora no formato: AAAA-MM-DD HH:MM")
+                    inicio = input("Data e hora de inicio: ")
+                    fim = input("Data e hora de fim: ")
+                    ok, msg = reserva_service.verificar_disponibilidade(lab_id, inicio, fim)
+                    print("\n" + msg)
+                except ValueError:
+                    print("\nID do laboratorio deve ser um numero!")
                 input("\nPressione Enter...")
+            
+            elif op == "3":
+                limpar()
+                print("="*50)
+                print("FAZER RESERVA")
+                print("="*50)
+                lab_service.listar()
+                try:
+                    lab_id = int(input("\nDigite o ID do laboratorio: "))
+                    print("\nDigite a data e hora no formato: AAAA-MM-DD HH:MM")
+                    inicio = input("Data e hora de inicio: ")
+                    fim = input("Data e hora de fim: ")
+                    ok, msg = reserva_service.reservar(user.rm, lab_id, inicio, fim)
+                    print("\n" + msg)
+                except ValueError:
+                    print("\nID do laboratorio deve ser um numero!")
+                input("\nPressione Enter...")
+            
             elif op == "4":
                 reserva_service.minhas_reservas(user.rm)
-                try:
-                    res_id = int(input("\nID da reserva para cancelar: "))
-                    ok, msg = reserva_service.cancelar(res_id, user.rm)
-                    print(msg)
-                except:
-                    print("ID inválido!")
-                input("Pressione Enter...")
-            elif op == "5" and auth.is_coordenador():
-                for r in reserva_service.reservas:
-                    lab = lab_service.buscar(r.id_laboratorio)
-                    print(f"#{r.id} | RM: {r.rm_aluno} | {lab.nome} | {r.data_inicio} | Status: {r.status}")
                 input("\nPressione Enter...")
+            
+            elif op == "5":
+                limpar()
+                print("="*50)
+                print("CANCELAR RESERVA")
+                print("="*50)
+                reserva_service.minhas_reservas(user.rm)
+                try:
+                    res_id = int(input("\nDigite o ID da reserva para cancelar: "))
+                    ok, msg = reserva_service.cancelar(res_id, user.rm)
+                    print("\n" + msg)
+                except ValueError:
+                    print("\nID da reserva deve ser um numero!")
+                input("\nPressione Enter...")
+            
+            elif op == "6" and auth.is_coordenador():
+                reserva_service.todas_reservas()
+                input("\nPressione Enter...")
+            
             elif op == "0":
                 auth.logout()
 
