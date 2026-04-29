@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - Sistema de Reservas</title>
+</head>
+<body>
+    <h2>Bem-vindo, {{ nome_usuario }}!</h2>
+    <hr>
+    <ul>
+        <li><a href="{{ url_for('listar_laboratorios') }}">Ver Laboratórios</a></li>
+        <li><a href="{{ url_for('minhas_reservas') }}">Minhas Reservas</a></li>
+        <li><a href="{{ url_for('logout') }}">Sair</a></li>
+    </ul>
+</body>
+</html>
