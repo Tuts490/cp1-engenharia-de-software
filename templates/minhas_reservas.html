@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Minhas Reservas - LabReserve</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 50px; }
+        .container { max-width: 800px; margin: auto; }
+        .reserva { border: 1px solid #ccc; border-radius: 10px; padding: 15px; margin-bottom: 15px; }
+        .reserva h3 { margin: 0 0 10px 0; color: #007bff; }
+        .cancelar { display: inline-block; padding: 5px 10px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 5px; font-size: 12px; }
+        .cancelar:hover { background-color: #c82333; }
+        .sem-reservas { text-align: center; color: #6c757d; padding: 40px; }
+        .voltar { display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 5px; }
+        .erro { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 10px; border-radius: 5px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>📌 Minhas Reservas</h2>
+        
+        {% if erro %}
+            <div class="erro">{{ erro }}</div>
+        {% endif %}
+        
+        {% if reservas %}
+            {% for reserva in reservas %}
+                <div class="reserva">
+                    <h3>Reserva #{{ reserva.id }}</h3>
+                    <p><strong>Laboratório:</strong> {{ reserva.lab_nome }}</p>
+                    <p><strong>Início:</strong> {{ reserva.data_inicio }}</p>
+                    <p><strong>Fim:</strong> {{ reserva.data_fim }}</p>
+                    <p><strong>Status:</strong> {{ reserva.status }}</p>
+                    <a href="{{ url_for('cancelar', reserva_id=reserva.id) }}" 
+                       class="cancelar"
+                       onclick="return confirm('Tem certeza que deseja cancelar esta reserva?')">
+                        ❌ Cancelar Reserva
+                    </a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="sem-reservas">
+                <p>📭 Você não possui reservas ativas.</p>
+                <p><a href="{{ url_for('reservar') }}">Clique aqui para fazer uma reserva</a></p>
+            </div>
+        {% endif %}
+        
+        <a href="{{ url_for('dashboard') }}" class="voltar">← Voltar ao Dashboard</a>
+    </div>
+</body>
+</html>

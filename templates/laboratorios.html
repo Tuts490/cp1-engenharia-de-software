@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Laboratórios - LabReserve</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 50px; }
+        .container { max-width: 800px; margin: auto; }
+        .laboratorio { border: 1px solid #ccc; border-radius: 10px; padding: 15px; margin-bottom: 15px; }
+        .laboratorio h3 { margin: 0 0 10px 0; color: #007bff; }
+        .voltar { display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>📋 Laboratórios Disponíveis</h2>
+        
+        {% for lab in laboratorios %}
+            <div class="laboratorio">
+                <h3>{{ lab.nome }}</h3>
+                <p><strong>ID:</strong> {{ lab.id }}</p>
+                <p><strong>Capacidade:</strong> {{ lab.capacidade }} alunos</p>
+                <p><strong>Recursos:</strong> {{ lab.recursos | join(', ') }}</p>
+                <p><strong>Local:</strong> {{ lab.predio }} - {{ lab.andar }}º andar</p>
+            </div>
+        {% endfor %}
+        
+        <a href="{{ url_for('dashboard') }}" class="voltar">← Voltar ao Dashboard</a>
+    </div>
+</body>
+</html>
