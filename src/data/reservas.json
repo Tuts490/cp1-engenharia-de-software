@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "rm_aluno": "123456",
+    "id_laboratorio": 1,
+    "data_inicio": "2025-04-01 14:00",
+    "data_fim": "2025-04-01 16:00",
+    "status": "ativa"
+  },
+  {
+    "id": 2,
+    "rm_aluno": "789012",
+    "id_laboratorio": 3,
+    "data_inicio": "2025-04-02 10:00",
+    "data_fim": "2025-04-02 12:00",
+    "status": "cancelada"
+  }
+]

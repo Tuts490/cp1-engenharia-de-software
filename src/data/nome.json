@@ -1,0 +1,23 @@
+[
+  {
+    "rm": "123456",
+    "nome": "Ana Silva",
+    "email": "ana@fiap.com.br",
+    "senha": "123456",
+    "tipo": "aluno"
+  },
+  {
+    "rm": "789012",
+    "nome": "Carlos Santos",
+    "email": "carlos@fiap.com.br",
+    "senha": "789012",
+    "tipo": "aluno"
+  },
+  {
+    "rm": "999888",
+    "nome": "Coordenação",
+    "email": "coord@fiap.com.br",
+    "senha": "admin123",
+    "tipo": "coordenador"
+  }
+]

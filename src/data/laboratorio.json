@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "nome": "Lab Informática A",
+    "capacidade": 30,
+    "recursos": ["computadores", "projetor"],
+    "predio": "Paulista",
+    "andar": 2
+  },
+  {
+    "id": 2,
+    "nome": "Lab Informática B",
+    "capacidade": 30,
+    "recursos": ["computadores"],
+    "predio": "Paulista",
+    "andar": 2
+  },
+  {
+    "id": 3,
+    "nome": "Lab Redes",
+    "capacidade": 20,
+    "recursos": ["equipamentos de rede", "projetor"],
+    "predio": "Paulista",
+    "andar": 3
+  },
+  {
+    "id": 4,
+    "nome": "Lab IoT",
+    "capacidade": 15,
+    "recursos": ["Arduinos", "sensores"],
+    "predio": "Vila Olímpia",
+    "andar": 1
+  },
+  {
+    "id": 5,
+    "nome": "Sala de Estudos",
+    "capacidade": 40,
+    "recursos": ["quadro branco", "mesas grandes"],
+    "predio": "Paulista",
+    "andar": 1
+  }
+]

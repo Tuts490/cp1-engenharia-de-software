@@ -14,5 +14,21 @@
     "data_inicio": "2026-03-27 14:00",
     "data_fim": "2026-03-27 16:00",
     "status": "cancelada"
+  },
+  {
+    "id": 3,
+    "rm_aluno": "555106",
+    "id_laboratorio": 1,
+    "data_inicio": "2026-04-01 14:00",
+    "data_fim": "2026-04-01 16:00",
+    "status": "cancelada"
+  },
+  {
+    "id": 4,
+    "rm_aluno": "555106",
+    "id_laboratorio": 1,
+    "data_inicio": "2026-03-31 14:00",
+    "data_fim": "2026-03-31 18:00",
+    "status": "ativa"
   }
 ]

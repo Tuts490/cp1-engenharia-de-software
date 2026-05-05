@@ -1,15 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <title>Dashboard - Sistema de Reservas</title>
+    <meta charset="UTF-8">
+    <title>Dashboard - LabReserve</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h2>Bem-vindo, {{ nome_usuario }}!</h2>
-    <hr>
-    <ul>
-        <li><a href="{{ url_for('listar_laboratorios') }}">Ver Laboratórios</a></li>
-        <li><a href="{{ url_for('minhas_reservas') }}">Minhas Reservas</a></li>
-        <li><a href="{{ url_for('logout') }}">Sair</a></li>
-    </ul>
+    <div class="container">
+        <div class="header">
+            <h1>🏫 LabReserve</h1>
+            <p>Sistema de Reserva de Laboratórios - FIAP</p>
+        </div>
+        
+        <div class="content">
+            <h2>Dashboard</h2>
+            
+            <div class="usuario-info">
+                <strong>Bem-vindo, {{ nome }}!</strong><br>
+                RM: {{ rm }} | Tipo: {{ tipo }}
+            </div>
+            
+            <ul class="menu">
+                <li><a href="{{ url_for('laboratorios') }}">📋 Listar Laboratórios</a></li>
+                <li><a href="{{ url_for('reservar') }}">📅 Fazer Reserva</a></li>
+                <li><a href="{{ url_for('minhas_reservas') }}">📌 Minhas Reservas</a></li>
+            </ul>
+            
+            <div class="text-center mt-20">
+                <a href="{{ url_for('logout') }}" class="btn btn-danger">🚪 Sair</a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>FIAP - Engenharia de Software © 2024</p>
+        </div>
+    </div>
 </body>
 </html>
